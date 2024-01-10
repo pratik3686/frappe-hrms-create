@@ -1,0 +1,91 @@
+name: Create HRMS Site
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        type: choice
+        description: Select the region
+        options:
+          - apply
+          - destroy
+          - refresh    
+      region:
+        type: choice
+        description: Select the region
+        options:
+          - ap-south-1
+          - us-east-1
+          - ap-east-1
+      product:
+        required: true
+        description: Product
+        default: pdt
+        # options:
+        # - DevOpsTeach
+        # - DevOpsTeach1
+        # - DevOpsTeach2
+      InstanceType:
+        type: choice
+        description: Select the instance type
+        options:
+          - t2.medium
+          - t3.xlarge
+          - t3.medium
+          - t2.large
+jobs:
+
+  tf_fmt:
+    name: Create Masterplane
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Checkout Repo
+      uses: actions/checkout@v1
+
+
+    - name: Get the keyfile
+      run: |
+        echo "${{ secrets.SSH_KEY }}" > "${{ github.workspace }}/hrms/scripts/id_rsa"
+        chmod 600 "${{ github.workspace }}/hrms/scripts/id_rsa"
+        
+    - name: Terraform Init
+      uses: hashicorp/terraform-github-actions@master
+      with:
+        tf_actions_version: 1.4.0
+        tf_actions_subcommand: 'init'
+        tf_actions_working_dir: 'hrms'
+        tf_actions_comment: true
+
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        AWS_ACCESS_KEY_ID:  ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY:  ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      
+
+    - name: 'Terraform Plan'
+      uses: hashicorp/terraform-github-actions@master
+      with:
+        tf_actions_version: 1.4.0
+        tf_actions_subcommand: 'plan'
+        tf_actions_working_dir: 'hrms'
+        tf_actions_comment: true
+        args: '-var="companyName=${{ inputs.product }}" -var="instanceType=${{ inputs.InstanceType }}"'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        AWS_ACCESS_KEY_ID:  ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY:  ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+
+    - name: 'Terraform ${{ inputs.action }}'
+      uses: hashicorp/terraform-github-actions@master
+      with:
+        tf_actions_version: 1.4.0
+        tf_actions_subcommand: ${{ inputs.action }}
+        tf_actions_working_dir: 'hrms'
+        tf_actions_comment: true
+        args: '-var="companyName=${{ inputs.product }}" -var="instanceType=${{ inputs.InstanceType }}"'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}        
+        AWS_ACCESS_KEY_ID:  ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY:  ${{ secrets.AWS_SECRET_ACCESS_KEY }}
