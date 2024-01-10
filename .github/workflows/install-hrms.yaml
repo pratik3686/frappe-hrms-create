@@ -36,6 +36,6 @@ jobs:
         # Replace SCRIPT_PATH with the path to your script on the local machine
         SCRIPT_PATH="${{ github.workspace }}/scripts/hrms_install.sh"
         # Copy the script to the EC2 instance
-        scp -i $PRIVATE_KEY_PATH $SCRIPT_PATH ubuntu@$EC2_PUBLIC_IP:/tmp/
+        #scp -i $PRIVATE_KEY_PATH $SCRIPT_PATH ubuntu@$EC2_PUBLIC_IP:/tmp/
         # Connect to the EC2 instance and execute the script
         ssh -i $PRIVATE_KEY_PATH ec2-user@$EC2_PUBLIC_IP "bash /tmp/$(basename $SCRIPT_PATH) /tmp/$pubIP"        
