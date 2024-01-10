@@ -28,7 +28,8 @@ jobs:
     - name: Configure Instance
 
       run: |
-        pubIP=$(aws ec2 describe-instances   --filters "Name=tag:Name,Values=test-company-hrms-ec2"   --query "Reservations[*].Instances[*].PublicIpAddress"   --output text)
+        export pIP=$(aws ec2 describe-instances   --filters "Name=tag:Name,Values=test-company-hrms-ec2"   --query "Reservations[*].Instances[*].PublicIpAddress"   --output text)
+        pubIP=$pIP
         echo "Public IP="${{ needs.deploy.outputs.env_var_output }}"
 
     - name: Build & Deploy
