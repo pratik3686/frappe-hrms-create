@@ -25,3 +25,7 @@ resource "aws_instance" "master" {
 
 
 }
+
+output "hrms_public_ip" {
+  value = aws_instance.master.public_dns
+}

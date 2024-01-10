@@ -1,0 +1,37 @@
+---
+Description: Stack of Asg and Launch Template
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  VPC:
+    Description: VPC Details
+    Type: AWS::EC2::VPC::Id 
+  AmiId:
+    Description: Region specific image from the Parameter Store
+    Type: String
+    Default: 'ami-0461b1436c9b3c1a3'
+  InstanceType:
+    Description: Amazon EC2 instance type for the instances
+    Type: String
+    Default: t3.micro
+
+Resources:
+  EC2SecurityGroup:
+        Type: AWS::EC2::SecurityGroup
+        Properties:
+            GroupDescription: 'SSH and Port 80'
+            VpcId:
+              Ref: VPC
+            SecurityGroupIngress:
+                - IpProtocol: tcp
+                  FromPort: 22
+                  ToPort: 22
+                  CidrIp: 0.0.0.0/0
+                - IpProtocol: tcp
+                  FromPort: 80
+                  ToPort: 80
+  HRMS_Instance:
+        Type: AWS::EC2::Instance
+        Properties: 
+          
+ 
+     
