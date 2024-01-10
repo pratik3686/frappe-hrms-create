@@ -14,8 +14,7 @@ jobs:
     permissions:
       id-token: write
       contents: read
-    outputs:
-          env_var_output: ${{ steps.set-env-var.outputs.pubIP }}      
+   
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -29,13 +28,14 @@ jobs:
 
       run: |
         export pIP=$(aws ec2 describe-instances   --filters "Name=tag:Name,Values=test-company-hrms-ec2"   --query "Reservations[*].Instances[*].PublicIpAddress"   --output text)
-        pubIP=$pIP
-        echo "Public IP"="${{ needs.deploy.outputs.env_var_output }}"
+        pubIP=$pIP >> "$GITHUB_ENV"
+        echo "Public IP"=$pubIP
+        echo 
 
     - name: Build & Deploy
       env:
           PRIVATE_KEY: ${{ secrets.SSH_KEY }}
-          HOSTNAME: "${{ needs.deploy.outputs.env_var_output }}"
+          HOSTNAME: $pubIP
           USER_NAME: ubuntu
     
       run: |
