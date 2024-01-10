@@ -6,7 +6,7 @@ FRAPPE_PASSWORD="frappe"
 
 # Set old and new server names
 OLD_SERVER_NAME="127.0.0.1"
-NEW_SERVER_NAME="13.234.238.200"  # Change this to your desired new server name
+NEW_SERVER_NAME=$1  # Change this to your desired new server name
 
 # Pull Docker image
 sudo docker pull indictrans/erpnext_setups:erpv15
