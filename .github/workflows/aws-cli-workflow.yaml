@@ -1,9 +1,14 @@
 name: AWS 
 on:
   workflow_dispatch:
+    inputs:
+      product:
+        required: true
+        description: Product
+        default: pdt  
 jobs:
   deploy:
-    name: Upload to Amazon S3
+    name: Create hrms instance
     runs-on: ubuntu-latest
     # These permissions are needed to interact with GitHub's OIDC Token endpoint.
     permissions:
@@ -17,6 +22,8 @@ jobs:
       with:
         role-to-assume: arn:aws:iam::734522607489:role/github-action
         aws-region: ap-south-1
-    - name: Copy files to the test website with the AWS CLI
+    - name: Create Instance
       run: |
-        aws s3 ls
+        aws ec2 run-instances \
+        --launch-template LaunchTemplateName=HRMS,Version=2 \
+        --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value="${{ inputs.product }}"-hrms-ec2}]'
