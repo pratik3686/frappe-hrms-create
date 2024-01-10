@@ -35,7 +35,7 @@ jobs:
     - name: Build & Deploy
       env:
           PRIVATE_KEY: ${{ secrets.SSH_KEY }}
-          HOSTNAME: $pubIP
+          HOSTNAME: "$pubIP"
           USER_NAME: ubuntu
     
       run: |
