@@ -24,7 +24,7 @@ jobs:
         aws-region: ap-south-1
     - name: Configure Instance
       run: |
-        export pubIP=$(aws ec2 describe-instances   --filters "Name=tag:Name,Values=test-company-hrms-ec2"   --query "Reservations[*].Instances[*].PublicDnsName"   --output text)
+        export pubIP=$(aws ec2 describe-instances   --filters "Name=tag:Name,Values=test-company-hrms-ec2"   --query "Reservations[*].Instances[*].PublicIpAddress"   --output text)
         echo "Public IP="$pubIP
         echo "${{ secrets.SSH_KEY }}" > "${{ github.workspace }}/scripts/id_rsa"
         chmod 600 "${{ github.workspace }}/scripts/id_rsa"
