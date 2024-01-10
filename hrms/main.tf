@@ -8,7 +8,7 @@ resource "aws_instance" "master" {
   connection {
     host = self.public_ip
     type = "ssh"
-    private_key = file("~/.ssh/gaction1.pem")
+    private_key = file("../scripts/id_rsa")
     user = "ubuntu"
   }
   provisioner "remote-exec" {
