@@ -26,4 +26,4 @@ jobs:
       run: |
         aws ec2 run-instances \
         --launch-template LaunchTemplateName=HRMS,Version=2 \
-        --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value="${{ inputs.product }}"-hrms-ec2}]'
+        --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value="${{ inputs.product }}-hrms-ec2"}]'
