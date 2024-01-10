@@ -25,13 +25,10 @@ jobs:
     - name: Configure Instance
       run: |
         export pubIP=$(aws ec2 describe-instances   --filters "Name=tag:Name,Values=test-company-hrms-ec2"   --query "Reservations[*].Instances[*].PublicDnsName"   --output text)
-    - name: Get the keyfile
-      run: |
+
         echo "${{ secrets.SSH_KEY }}" > "${{ github.workspace }}/scripts/id_rsa"
         chmod 600 "${{ github.workspace }}/scripts/id_rsa"
 
-    - name: Connect to EC2 and Execute Script
-      run: |
         # Replace YOUR_EC2_PUBLIC_IP with the actual public IP of your EC2 instance
         EC2_PUBLIC_IP="$pubIP"
         # Replace PRIVATE_KEY_PATH with the path to your private key file
