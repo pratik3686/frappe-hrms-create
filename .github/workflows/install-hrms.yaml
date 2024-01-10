@@ -35,13 +35,15 @@ jobs:
     - name: Build & Deploy
       env:
           PRIVATE_KEY: ${{ secrets.SSH_KEY }}
-          HOSTNAME: "$pubIP"
+          HOSTNAME: ""
           USER_NAME: ubuntu
     
       run: |
-        echo "Host Name=${HOSTNAME}"
+        export pIP=$(aws ec2 describe-instances   --filters "Name=tag:Name,Values=test-company-hrms-ec2"   --query "Reservations[*].Instances[*].PublicIpAddress"   --output text)
+
+        echo "Host Name=$pIP"
         echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-        ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
+        ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@$pIP '
             # Now we have got the access of EC2 and we will start the deploy .
             # Set container name
             CONTAINER_NAME="c1"
@@ -51,7 +53,7 @@ jobs:
             
             # Set old and new server names
             OLD_SERVER_NAME="127.0.0.1"
-            NEW_SERVER_NAME=${HOSTNAME}   # Change this to your desired new server name
+            NEW_SERVER_NAME=$pIP   # Change this to your desired new server name
             
             # Pull Docker image
             sudo docker pull indictrans/erpnext_setups:erpv15
