@@ -46,8 +46,8 @@ jobs:
 
     - name: Get the keyfile
       run: |
-        echo "${{ secrets.SSH_KEY }}" > "${{ github.workspace }}/hrms/scripts/id_rsa"
-        chmod 600 "${{ github.workspace }}/hrms/scripts/id_rsa"
+        echo "${{ secrets.SSH_KEY }}" > "${{ github.workspace }}/scripts/id_rsa"
+        chmod 600 "${{ github.workspace }}/scripts/id_rsa"
         
     - name: Terraform Init
       uses: hashicorp/terraform-github-actions@master
